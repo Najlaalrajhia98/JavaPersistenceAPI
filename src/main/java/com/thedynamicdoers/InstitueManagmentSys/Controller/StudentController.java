@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * The StudentController class is responsible for handling HTTP requests and responses for Student resource.
@@ -41,8 +42,8 @@ public class StudentController {
      * @return The student with the given id.
      */
     @GetMapping(path = "/{id}")
-    public Student getStudent(@PathVariable int id) {
-        Student foundedStudent = studentService.getStudent(id);
+    public Optional<Student> getStudent(@PathVariable int id) {
+        Optional<Student> foundedStudent = studentService.getStudent(id);
         return foundedStudent;
     }
 
@@ -78,8 +79,8 @@ public class StudentController {
      * @return The deleted student object.
      */
     @DeleteMapping(path = "/{id}")
-    public Student removeStudent(@PathVariable int id) {
-        Student removedStudent = studentService.deleteStudent(id);
+    public Optional<Student> removeStudent(@PathVariable int id) {
+      Optional <Student> removedStudent = studentService.deleteStudent(id);
         return removedStudent;
     }
 }

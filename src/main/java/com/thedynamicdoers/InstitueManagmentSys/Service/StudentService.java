@@ -1,42 +1,48 @@
 package com.thedynamicdoers.InstitueManagmentSys.Service;
 
 import com.thedynamicdoers.InstitueManagmentSys.Model.Student;
+import com.thedynamicdoers.InstitueManagmentSys.Repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @Service
 public class StudentService {
-    public List<Student> listOfStudents =  new CopyOnWriteArrayList<>();
-    int currId=1;
+    public List<Student> listOfStudents = new CopyOnWriteArrayList<>();
+    @Autowired
+    StudentRepository studentRepository;
 
     public List<Student> getListOfStudents() {
-        return listOfStudents;
+        return studentRepository.findAll();
     }
-    public Student getStudent(int id ){
-        Student foundStudent = listOfStudents.stream().filter(
-                (currentStudent) -> {
-                    return currentStudent.id == id ;
-                }
-        ).findFirst().get();
-        return foundStudent;
+
+    public Optional<Student> getStudent(int id) {
+        return studentRepository.findById(id);
     }
-    public Student deleteStudent(int id ){
-        Student foundedStudent= getStudent(id);
-        listOfStudents.remove(foundedStudent);
-        return foundedStudent;
+
+    public Optional<Student> deleteStudent(int id) {
+        Optional<Student> studentToBeDeleted = studentRepository.findById(id);
+        studentRepository.deleteById(id);
+        return studentToBeDeleted;
     }
-    public Student createStudent(Student newStudent){
-        newStudent.id= this.currId++;
-        listOfStudents.add(newStudent);
-        return newStudent;
+
+    public Student createStudent(Student newStudent) {
+        return studentRepository.save(newStudent);
 
     }
-    public Student updateStudent(int id,Student upToDateStudent){
-        Student foundedStudent = getStudent(id);
-        foundedStudent.name= upToDateStudent.name;
-        foundedStudent.email= upToDateStudent.email;
+
+    public Optional<Student> updateStudent(int id, Student upToDateStudent) {
+        Optional<Student> foundedStudent = getStudent(id);
+        foundedStudent.ifPresent(
+                (currentStudent) -> {
+                    currentStudent.name = upToDateStudent.name;
+                    currentStudent.email = upToDateStudent.email;
+                    studentRepository.save(currentStudent);
+                }
+        );
         return foundedStudent;
 
     }

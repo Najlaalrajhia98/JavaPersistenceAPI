@@ -31,7 +31,7 @@ public class TeacherController {
     }
 
     @PutMapping(path = "/{id}")
-    public Optional <Teacher> ubdateTeacher(@PathVariable int id, @RequestBody Teacher teacher) {
+    public Optional <Teacher> updateTeacher(@PathVariable int id, @RequestBody Teacher teacher) {
         return teacherService.updateSpecificTeacherInfo(id, teacher);
     }
 
